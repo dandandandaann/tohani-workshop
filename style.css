@@ -1,10 +1,6 @@
-html {
+body {
     background: #bee1e7 linear-gradient(#bee1e7, #f6abb9) fixed;
     height: 100%;
-    width: 100%;
-}
-
-body {
     margin: 0 auto;
     padding: 5% 0 0 5%;
     width: 800px;
