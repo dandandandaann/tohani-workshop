@@ -1,0 +1,45 @@
+html {
+    background: #bee1e7 linear-gradient(#bee1e7, #f6abb9) fixed;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0 auto;
+    padding: 5% 0 0 5%;
+    width: 800px;
+    font: 15px "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif;
+    color: #112e35;
+}
+
+#title {
+    text-align: center;
+}
+
+#bio {
+    display: flex;
+    flex-direction: row;
+}
+#bio img {
+    width: 180; 
+    height: 280px; 
+    margin: 0px;
+}
+
+#contact-footer {
+    padding-top: 40px;
+}
+
+#contact-footer a {
+    vertical-align: middle;
+    margin-left: 10px;
+    text-decoration: none
+}
+
+#contact-footer img {
+    width: 30px; 
+    height: 30px; 
+    margin: 0px;
+    border-radius:6px;
+}
+
