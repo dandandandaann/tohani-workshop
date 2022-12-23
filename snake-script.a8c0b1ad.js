@@ -117,62 +117,72 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
+})({"snake/snake-script.ts":[function(require,module,exports) {
+"use strict";
+
+var baseSpeed = 4;
+var timeSpeedMs = 50;
+var hitErrorMarginPx = 18;
+var MovementKey;
+(function (MovementKey) {
+  MovementKey[MovementKey["ArrowUp"] = 0] = "ArrowUp";
+  MovementKey[MovementKey["ArrowRight"] = 1] = "ArrowRight";
+  MovementKey[MovementKey["ArrowDown"] = 2] = "ArrowDown";
+  MovementKey[MovementKey["ArrowLeft"] = 3] = "ArrowLeft";
+})(MovementKey || (MovementKey = {}));
+var DirectionProperty = new Map([[MovementKey.ArrowUp, 'top'], [MovementKey.ArrowRight, 'left'], [MovementKey.ArrowDown, 'top'], [MovementKey.ArrowLeft, 'left']]);
+var DirectionSpeed = new Map([[MovementKey.ArrowUp, -baseSpeed], [MovementKey.ArrowRight, +baseSpeed], [MovementKey.ArrowDown, +baseSpeed], [MovementKey.ArrowLeft, -baseSpeed]]);
+var currentDirection = null;
+var currentSpeed = baseSpeed;
+var timer = setInterval(function () {
+  Time();
+}, timeSpeedMs);
+// clearInterval(timer);
+document.onkeydown = function (ev) {
+  var keyCode = "";
+  if (ev.key !== undefined) {
+    keyCode = ev.key;
+  } else if (ev.keyIdentifier !== undefined) {
+    keyCode = ev.keyIdentifier;
+  } else if (ev.keyCode !== undefined) {
+    keyCode = ev.keyCode.toString();
   }
-  return bundleURL;
-}
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
+  if (keyCode in MovementKey) {
+    var move = MovementKey[keyCode];
+    SetMove(DirectionProperty.get(move), DirectionSpeed.get(move));
   }
-  return '/';
+};
+function SetMove(cssProperty, speed) {
+  currentDirection = cssProperty;
+  currentSpeed = speed;
 }
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
+function Time() {
+  if (currentDirection == null) return;
+  var head = MoveHead(currentDirection, currentSpeed);
+  if (CheckIfHitFood(head)) {
+    console.log('food was hit');
+  }
 }
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-function updateLink(link) {
-  var newLink = link.cloneNode();
-  newLink.onload = function () {
-    link.remove();
+function MoveHead(cssProperty, speed) {
+  var head = document.querySelector('div#head');
+  var headStyle = getComputedStyle(head);
+  head.style[cssProperty] = "" + (parseInt(headStyle[cssProperty]) + speed);
+  var top = parseInt(headStyle['top']);
+  var left = parseInt(headStyle['left']);
+  return {
+    top: top,
+    left: left
   };
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
 }
-var cssTimeout = null;
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-    cssTimeout = null;
-  }, 50);
+function CheckIfHitFood(head) {
+  var food = document.querySelector('#food');
+  var foodStyle = getComputedStyle(food);
+  var top = parseInt(foodStyle['top']);
+  var left = parseInt(foodStyle['left']);
+  if (head.top > top - hitErrorMarginPx && head.top < top + hitErrorMarginPx && head.left > left - hitErrorMarginPx && head.left < left + hitErrorMarginPx) return true;
+  return false;
 }
-module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -341,5 +351,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/style.e308ff8e.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","snake/snake-script.ts"], null)
+//# sourceMappingURL=/snake-script.a8c0b1ad.js.map
